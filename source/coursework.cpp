@@ -168,9 +168,27 @@ int main(void)
 
        
 
-            // Bind the texture to the VAO
-            glBindTexture(GL_TEXTURE_2D, texture);
+       // Bind the texture to the VAO
+        glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
+
+
+        // Animate TRAINGLE
+        float angle = Maths::radians(glfwGetTime() * 360.0f / 2.0f);
+        glm::mat4 translate = Maths::translate(glm::vec3(-0.5f, 0.2f, 0.0f));
+        glm::mat4 scale = Maths::scale(glm::vec3(0.4f, 0.3f, 0.0f));
+        glm::mat4 rotate = Maths::rotate(angle, glm::vec3(0.0f, 0.0f, 1.0f));
+       
+
+        // Send the transformation matrix using uniform to the shader
+        glm::mat4 transformation = translate * rotate * scale;
+        unsigned int transformationID = glGetUniformLocation(shaderID, "transformation");
+        glUniformMatrix4fv(transformationID, 1, GL_FALSE, &transformation[0][0]);
+
+
+
+
+
 
 
 
