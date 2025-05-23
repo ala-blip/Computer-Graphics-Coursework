@@ -10,6 +10,8 @@
 #include <common/camera.hpp>
 #include <common/model.hpp>
 #include <common/light.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtx/io.hpp>
 
 // Function prototypes
 void keyboardInput(GLFWwindow *window);
@@ -61,6 +63,8 @@ int main( void )
     // Ensure we can capture keyboard inputs
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
+
+  
     // Define vertices
     const float vertices[] = {
         // x     y     z
@@ -105,11 +109,6 @@ int main( void )
 
     // Use the shader program
     glUseProgram(shaderID);
-
-
-
-
-
 
 
     // Create and bind texture
@@ -160,11 +159,18 @@ stbi_image_free(data);
         glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-
+        
         // Bind the texture to the VAO
         glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
 
+        //Translation method from maths class
+        glm::mat4 translate = Maths::translate(glm::vec3(-0.3f, 0.4f, 0.0f));
+
+        // Send the transformation matrix using uniform to the shader
+        glm::mat4 transformation = translate;
+        unsigned int transformationID = glGetUniformLocation(shaderID, "transformation");
+        glUniformMatrix4fv(transformationID, 1, GL_FALSE, &transformation[0][0]);
 
         // Draw the triangle
         glDrawArrays(GL_TRIANGLES, 0, 3);
