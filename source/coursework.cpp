@@ -69,6 +69,14 @@ int main( void )
          0.0f,  0.5f, 0.0f
     };
 
+    // Define texture coordinates
+    const float uv[] = {
+        // u   v
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        0.5f, 1.0f
+    };
+
     // Create the Vertex Array Object (VAO)
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
@@ -81,12 +89,49 @@ int main( void )
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 
+
+    // Create texture buffer
+    unsigned int uvBuffer;
+    glGenBuffers(1, &uvBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(uv), uv, GL_STATIC_DRAW);
+
+
+
+
     // Compile shader program
     unsigned int shaderID = LoadShaders("vertexShader.glsl", "fragmentShader.glsl");
 
 
     // Use the shader program
     glUseProgram(shaderID);
+
+
+
+
+
+
+
+    // Create and bind texture
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    // Load texture image from file
+const char *path = "../assets/crate.jpg";
+int width, height, nChannels;
+stbi_set_flip_vertically_on_load(true);
+unsigned char *data = stbi_load(path, &width, &height, &nChannels, 0);
+
+if (data)
+    std::cout << "Texture loaded." << std::endl;
+else
+    std::cout << "Texture not loaded. Check the path." << std::endl;
+
+// Specify 2D texture
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+glGenerateMipmap(GL_TEXTURE_2D);
+// Free the image from the memory
+stbi_image_free(data);
 
     // Render loop
     while (!glfwWindowShouldClose(window))
@@ -108,6 +153,17 @@ int main( void )
             GL_FALSE,  // normalise?
             0,         // stride
             (void*)0); // offset
+
+
+        // Send the UV buffer to the shaders
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+
+        // Bind the texture to the VAO
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glBindVertexArray(VAO);
 
 
         // Draw the triangle
