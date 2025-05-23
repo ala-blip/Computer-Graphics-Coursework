@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <cmath>
 
@@ -14,23 +15,23 @@
 #include <glm/gtx/io.hpp>
 
 // Function prototypes
-void keyboardInput(GLFWwindow *window);
+void keyboardInput(GLFWwindow* window);
 
-int main( void )
+int main(void)
 {
     // =========================================================================
     // Window creation - you shouldn't need to change this code
     // -------------------------------------------------------------------------
     // Initialise GLFW
-    if( !glfwInit() )
+    if (!glfwInit())
     {
-        fprintf( stderr, "Failed to initialize GLFW\n" );
+        fprintf(stderr, "Failed to initialize GLFW\n");
         getchar();
         return -1;
     }
 
     glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -39,8 +40,8 @@ int main( void )
     // Open a window and create its OpenGL context
     GLFWwindow* window;
     window = glfwCreateWindow(1024, 768, "Computer Graphics Coursework", NULL, NULL);
-    
-    if( window == NULL ){
+
+    if (window == NULL) {
         fprintf(stderr, "Failed to open GLFW window.\n");
         getchar();
         glfwTerminate();
@@ -59,88 +60,25 @@ int main( void )
     // -------------------------------------------------------------------------
     // End of window creation
     // =========================================================================
-    
+
     // Ensure we can capture keyboard inputs
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-
-
-    //Define pyramid model 
     // Define vertices
     const float vertices[] = {
-
-        //base of pyramid made of 2 traingles
         // x     y     z
-        -0.5f,  0.0f,-0.5f,
-         0.5f,  0.0f,-0.5f,
-         0.5f,  0.0f, 0.5f
-
-        -0.5f, 0.0f, -0.5f,
-         0.5f, 0.0f,  0.5f,
-        -0.5f, 0.0f,  0.5f,
-
-        //side 1
-        // x     y     z
-        -0.5f, 0.0f, -0.5f,
-         0.5f, 0.0f, -0.5f,
-         0.0f, 0.8f,  0.0f,
-
-        //side 2
-        // x     y     z
-         0.5f, 0.0f, -0.5f,
-         0.5f, 0.0f,  0.5f,
-         0.0f, 0.8f,  0.0f,
-
-
-        //side 3
-        // x     y     z
-        0.5f, 0.0f, 0.5f,
-       -0.5f, 0.0f, 0.5f,
-        0.0f, 0.8f, 0.0f,
-
-
-        //side 4
-        // x     y     z
-        -0.5f, 0.0f,  0.5f,
-        -0.5f, 0.0f, -0.5f,
-         0.0f, 0.8f,  0.0f
-
+        -0.5f, -0.5f, 0.0f,
+         0.5f, -0.5f, 0.0f,
+         0.0f,  0.5f, 0.0f
     };
 
-    // Define texture coordinates for all sides of pyramid
+    // Define texture coordinates
     const float uv[] = {
-     // u   v
-     //base traingles
-     0.0f, 0.0f,
-     1.0f, 0.0f,
-     0.5f, 1.0f,
-
-     0.0f, 0.0f,
-     1.0f, 1.0f,
-     0.0f, 1.0f,
-
-    // Side 1
-    0.0f, 0.0f,
-    1.0f, 0.0f,
-    0.5f, 1.0f,
-
-    // Side 2
-    0.0f, 0.0f,
-    1.0f, 0.0f,
-    0.5f, 1.0f,
-
-    // Side 3
-    0.0f, 0.0f,
-    1.0f, 0.0f,
-    0.5f, 1.0f,
-
-    // Side 4
-    0.0f, 0.0f,
-    1.0f, 0.0f,
-    0.5f, 1.0f,
+        // u   v
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        0.5f, 1.0f
     };
-
-   
 
     // Create the Vertex Array Object (VAO)
     unsigned int VAO;
@@ -176,29 +114,37 @@ int main( void )
     unsigned int texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
-    // Load texture image from file
-const char *path = "../assets/crate.jpg";
-int width, height, nChannels;
-stbi_set_flip_vertically_on_load(true);
-unsigned char *data = stbi_load(path, &width, &height, &nChannels, 0);
+    
 
-if (data)
-    std::cout << "Texture loaded." << std::endl;
-else
-    std::cout << "Texture not loaded. Check the path." << std::endl;
 
-// Specify 2D texture
-glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-glGenerateMipmap(GL_TEXTURE_2D);
-// Free the image from the memory
-stbi_image_free(data);
+   
+ // Load texture image from file
+    const char* path = "../assets/mario.png";
+    int width, height, nChannels;
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* data = stbi_load(path, &width, &height, &nChannels, 0);
+
+    if (data)
+        std::cout << "Texture loaded." << std::endl;
+    else
+        std::cout << "Texture not loaded. Check the path." << std::endl;
+
+    // Specify 2D texture
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+
+
+    
+    // Free the image from the memory
+    stbi_image_free(data);
 
     // Render loop
     while (!glfwWindowShouldClose(window))
     {
         // Get inputs
         keyboardInput(window);
-        
+
         // Clear the window
         glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -207,7 +153,7 @@ stbi_image_free(data);
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glVertexAttribPointer
-           (0,         // attribute
+        (0,         // attribute
             3,         // size
             GL_FLOAT,  // type
             GL_FALSE,  // normalise?
@@ -220,34 +166,30 @@ stbi_image_free(data);
         glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-        
-        // Bind the texture to the VAO
-        glBindTexture(GL_TEXTURE_2D, texture);
+       
+
+            // Bind the texture to the VAO
+            glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
 
-        //Translation method from maths class
-        glm::mat4 translate = Maths::translate(glm::vec3(-0.3f, 0.4f, 0.0f));
 
-        // Send the transformation matrix using uniform to the shader
-        glm::mat4 transformation = translate;
-        unsigned int transformationID = glGetUniformLocation(shaderID, "transformation");
-        glUniformMatrix4fv(transformationID, 1, GL_FALSE, &transformation[0][0]);
+
 
         // Draw the triangle
-        glDrawArrays(GL_TRIANGLES, 0, 18);//6*3 since pyramid has 18 verticies
+        glDrawArrays(GL_TRIANGLES, 0, 3);
         glDisableVertexAttribArray(0);
-        
+
         // Swap buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    
+
     // Close OpenGL window and terminate GLFW
     glfwTerminate();
     return 0;
 }
 
-void keyboardInput(GLFWwindow *window)
+void keyboardInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
