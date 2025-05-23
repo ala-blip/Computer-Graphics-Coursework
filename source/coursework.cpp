@@ -64,22 +64,83 @@ int main( void )
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
 
-  
+
+    //Define pyramid model 
     // Define vertices
     const float vertices[] = {
+
+        //base of pyramid made of 2 traingles
         // x     y     z
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
+        -0.5f,  0.0f,-0.5f,
+         0.5f,  0.0f,-0.5f,
+         0.5f,  0.0f, 0.5f
+
+        -0.5f, 0.0f, -0.5f,
+         0.5f, 0.0f,  0.5f,
+        -0.5f, 0.0f,  0.5f,
+
+        //side 1
+        // x     y     z
+        -0.5f, 0.0f, -0.5f,
+         0.5f, 0.0f, -0.5f,
+         0.0f, 0.8f,  0.0f,
+
+        //side 2
+        // x     y     z
+         0.5f, 0.0f, -0.5f,
+         0.5f, 0.0f,  0.5f,
+         0.0f, 0.8f,  0.0f,
+
+
+        //side 3
+        // x     y     z
+        0.5f, 0.0f, 0.5f,
+       -0.5f, 0.0f, 0.5f,
+        0.0f, 0.8f, 0.0f,
+
+
+        //side 4
+        // x     y     z
+        -0.5f, 0.0f,  0.5f,
+        -0.5f, 0.0f, -0.5f,
+         0.0f, 0.8f,  0.0f
+
     };
 
-    // Define texture coordinates
+    // Define texture coordinates for all sides of pyramid
     const float uv[] = {
-        // u   v
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        0.5f, 1.0f
+     // u   v
+     //base traingles
+     0.0f, 0.0f,
+     1.0f, 0.0f,
+     0.5f, 1.0f,
+
+     0.0f, 0.0f,
+     1.0f, 1.0f,
+     0.0f, 1.0f,
+
+    // Side 1
+    0.0f, 0.0f,
+    1.0f, 0.0f,
+    0.5f, 1.0f,
+
+    // Side 2
+    0.0f, 0.0f,
+    1.0f, 0.0f,
+    0.5f, 1.0f,
+
+    // Side 3
+    0.0f, 0.0f,
+    1.0f, 0.0f,
+    0.5f, 1.0f,
+
+    // Side 4
+    0.0f, 0.0f,
+    1.0f, 0.0f,
+    0.5f, 1.0f,
     };
+
+   
 
     // Create the Vertex Array Object (VAO)
     unsigned int VAO;
@@ -173,7 +234,7 @@ stbi_image_free(data);
         glUniformMatrix4fv(transformationID, 1, GL_FALSE, &transformation[0][0]);
 
         // Draw the triangle
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 18);//6*3 since pyramid has 18 verticies
         glDisableVertexAttribArray(0);
         
         // Swap buffers
